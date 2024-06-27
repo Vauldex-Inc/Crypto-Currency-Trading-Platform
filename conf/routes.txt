@@ -1,0 +1,64 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+GET   /i18n.js                                  controllers.JsI18nController.script
+GET   /i18n/messages.js                         controllers.JsI18nController.messages(p: String, v: String = "messages")
+GET   /i18n/additional.js                       controllers.JsI18nController.additionalMessages(p: String, v: String = "messages")
+GET   /i18n/messages.json                       controllers.JsI18nController.messagesJson(p: String)
+
+GET   /i18n/origin/:origin                      controllers.LanguageController.switchOrigin(origin: String)
+GET   /i18n/language/:lang                      controllers.LanguageController.switchLanguage(lang: String)
+
+# Mr.Wallet Routing
+GET   /                                         controllers.HomeController.launcher
+GET   /dashboard                                controllers.HomeController.launcher
+GET   /exchange                                 controllers.HomeController.launcher
+GET   /send                                     controllers.HomeController.launcher
+GET   /trade                                    controllers.HomeController.trade
+
+GET   /withdraw/trade-wallet                    controllers.HomeController.launcher
+GET   /withdraw/ripple-gateway                  controllers.HomeController.launcher
+
+GET   /settings/account                         controllers.HomeController.launcher
+GET   /settings/profile                         controllers.HomeController.launcher
+GET   /settings/security                        controllers.HomeController.launcher
+GET   /settings/notification                    controllers.HomeController.launcher
+GET   /settings/wallet                          controllers.HomeController.launcher
+GET   /settings/affiliate                       controllers.HomeController.launcher
+GET   /settings/corporate                       controllers.HomeController.launcher
+GET   /settings/wallet/:walletName              controllers.HomeController.wallet(walletName: String)
+GET   /settings/wallet/ripple/:walletName       controllers.HomeController.wallet(walletName: String)
+
+GET   /history/funds                            controllers.HomeController.launcher
+GET   /history/deposit                          controllers.HomeController.launcher
+GET   /history/withdraw                         controllers.HomeController.launcher
+GET   /history/transaction                      controllers.HomeController.launcher
+GET   /history/exchange                         controllers.HomeController.launcher
+GET   /history/trade                            controllers.HomeController.launcher
+GET   /history/send                             controllers.HomeController.launcher
+GET   /history/receive                          controllers.HomeController.launcher
+GET   /history/signin                           controllers.HomeController.launcher
+
+GET   /logout                                   controllers.HomeController.logout
+
+# Mastergate api
+
+->   /api                                       api.Routes
+
+
+# FORGOTTEN MASTERKEY
+GET   /forgotten/masterkey                      controllers.ForgottenController.index
+GET   /forgotten/email-verification             controllers.ForgottenController.emailVerification
+GET   /forgotten/email-verification/code        controllers.ForgottenController.emailVerificationCode
+GET   /forgotten/process                        controllers.ForgottenController.process
+GET   /forgotten/upload                         controllers.ForgottenController.upload
+GET   /forgotten/issue/exist                    controllers.ForgottenController.conflict
+GET   /forgotten/account                        controllers.ForgottenController.addAccount
+GET   /agreement/terms                          controllers.ForgottenController.termsOfUse
+GET   /agreement/privacy                        controllers.ForgottenController.privacyPolicy
+
+
+# Map static resources from the web jars to the /assets/lib/wjars URL path
+GET   /wj-assets/*file                          controllers.WebJarAssets.at(file)
+GET   /assets/*file                             controllers.Assets.versioned(path="/public", file: Asset)

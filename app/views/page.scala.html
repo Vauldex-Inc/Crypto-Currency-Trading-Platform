@@ -1,0 +1,123 @@
+@import helper._
+@(data: String = "")(implicit req: RequestHeader, messages: Messages, wja: WebJarAssets, langs: DefaultLangs, conf: play.api.Configuration)
+
+@cookie = @{ req.cookies.get(conf.getString("play.i18n.langCookieName").getOrElse("APL")) }
+@lang = @{ if(cookie) cookie.get.value else "en-JP" }
+
+@base {
+  <link href="@routes.Assets.versioned("styles/wallet.css")" rel="stylesheet">
+  <link href="@routes.Assets.versioned("styles/flatpickr.css")" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="//oss.maxcdn.com/jquery.trip.js/3.3.3/trip.min.css">
+  <!--[if IE]>
+    <script  src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+} {
+  <div id="body-wraper">
+    <div class="row expanded">
+      @* side *@
+      <aside id="side-nav" class="fixed-area shrink columns">
+        <side-nav></side-nav>
+      </aside>
+      <section id="container" class="columns">
+        <div class="row">
+          <div id="header-wrap" class="small-12 columns">
+            @* header *@
+            <header class="row expanded align-right">
+              <h1 class="headerTop" id="title"></h1>
+              <div class="small-6 columns show-for-small-only">
+                <a href="javascript:;" onclick="mr.Helpers.factory().canvasEvent()">
+                  <i class="icon-canvas"></i>
+                </a>
+              </div>
+              <nav class="small-6 columns">
+                <top-menu></top-menu>
+              </nav>
+            </header>
+            @* nav *@
+            <div class="row top-nav">
+              <nav class="small-12 columns">
+                <top-nav></top-nav>
+              </nav>
+            </div>
+          </div>
+        </div>
+        @* content *@
+        <div id="content" class="row">
+          <div class="small-12 columns"><account-level></account-level></div>
+          <div class="small-12 columns">
+            <div id="content-body" class="row align-center"></div>
+          </div>
+        </div>
+        <div class="js-off-canvas-exit" onclick="mr.Helpers.factory().canvasEvent()"></div>
+      </section>
+    </div>
+  </div>
+  <div id="body-loading" class=" text-center body-loading"></div>
+  <reveal-password></reveal-password>
+  <reveal-password2></reveal-password2>
+  <reveal-bip-password></reveal-bip-password>
+  <reveal-process></reveal-process>
+  <reveal-global></reveal-global>
+  <reveal-expired></reveal-expired>
+} {
+  <!-- Dependencies Library -->
+  <script>
+    window.mr = {
+      fundgatewayURL: '@conf.getString("fundgateway.url")',
+      currencydApiUrl: '@conf.getString("currencyd.api.url")',
+      stellarServerUrl: '@conf.getString("stellar.server.url")',
+      ethServerUrl: '@conf.getString("eth.server.url")',
+      mastergateApiUrl: '@conf.getString("mastergate.api.url")',
+      mridApiUrl: '@conf.getString("mrid.api.url")',
+      mrsupportUrl: '@conf.getString("mrsupport.url")',
+      mrexchangeUrl: '@conf.getString("mr.exchange.web.url")',
+      blockchainUrl: '@conf.getString("blockchain.url")',
+      etherescanUrl: '@conf.getString("etherescan.url")',
+      ethclassicUrl: '@conf.getString("ethclassic.url")',
+      coinFeesUrl: '@conf.getString("coinfees.url")',
+      contractAugur: '@conf.getString("augur.contract")',
+      sessionTimeout: '@conf.getMilliseconds("play.http.session.maxAge")',
+      usedLanguage: '@lang',
+      symbols: '@conf.getStringList("currencies")'.replace(/[\[\] ]/gi, "").trim().split(","),
+      app: {},
+      classes: {},
+      dataApiUrls: {
+        private: '@conf.getString("private.ripple.data.api")',
+        public: '@conf.getString("public.ripple.data.api")'
+      },
+      exchangeLinks: {
+        aml: '@conf.getString("mr.exchange.aml")',
+        terms: '@conf.getString("mr.exchange.terms")',
+        privacy: '@conf.getString("mr.exchange.privacy")'
+      },
+      supportLinks: {
+        exchange: '@conf.getString("mr.support.exchange")'
+      },
+      blogLinks: {
+        depositSumishin: '@conf.getString("mr.exchange.blog.url")'+'@conf.getString("blog.depositSumishin.url")'
+      }
+    }
+  </script>
+
+  <script defer src='@controllers.routes.JsI18nController.script'></script>
+  <script defer src='@controllers.routes.JsI18nController.messages("")'></script>
+  <script defer src='@routes.Assets.versioned("scripts/bitcoin-lib/bitcoin.min.js")'></script>
+  <script defer src='@routes.Assets.versioned("scripts/bitcoin-lib/BTCmnemonic.js")'></script>
+  <script defer src='@routes.Assets.versioned("wj-libs.min.js")'></script>
+  <script defer src='@routes.Assets.versioned("libs.min.js")'></script>
+  <script defer src="//oss.maxcdn.com/jquery.trip.js/3.3.3/trip.min.js"></script>
+  <script defer src='@routes.Assets.versioned("comps.min.js")'></script>
+  <script defer src='@routes.Assets.versioned("scripts/main.min.js")'></script>
+  <script>
+    mr.languages = '@langs.availables.map(r => Html(r.code)).mkString(",")'.split(',');
+    function onLogout(event) {
+      mr.Cookies.getInstance().clearCookies()
+      localStorage.clear()
+      sessionStorage.clear()
+      window.location.href = '/logout'
+    }
+
+  </script>
+}
+
+
